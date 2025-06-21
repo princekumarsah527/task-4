@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Listing</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6 font-sans">
+
+  <div class="max-w-6xl mx-auto">
+    <h1 class="text-3xl font-bold text-center text-blue-700 mb-6">🛍 Product Listing Page</h1>
+
+    <!-- Filters -->
+    <div class="flex flex-wrap justify-between items-center bg-white p-4 rounded shadow mb-6">
+      <div>
+        <label class="mr-2 font-medium">Category:</label>
+        <select id="categoryFilter" onchange="filterProducts()" class="border rounded px-2 py-1">
+          <option value="all">All</option>
+          <option value="electronics">Electronics</option>
+          <option value="fashion">Fashion</option>
+          <option value="books">Books</option>
+        </select>
+      </div>
+      <div>
+        <label class="mr-2 font-medium">Sort by:</label>
+        <select id="sortOption" onchange="sortProducts()" class="border rounded px-2 py-1">
+          <option value="default">Default</option>
+          <option value="priceLow">Price: Low to High</option>
+          <option value="priceHigh">Price: High to Low</option>
+          <option value="ratingHigh">Rating: High to Low</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div id="productList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
+  </div>
+
+  <script>
+    const products = [
+      { name: 'Smartphone', category: 'electronics', price: 199, rating: 4.4 },
+      { name: 'Jeans', category: 'fashion', price: 49, rating: 4.0 },
+      { name: 'Laptop', category: 'electronics', price: 899, rating: 4.7 },
+      { name: 'T-Shirt', category: 'fashion', price: 19, rating: 2.9 },
+      { name: 'Novel - The Alchemist', category: 'books', price: 12, rating: 4.8 },
+      { name: 'Headphones', category: 'electronics', price: 59, rating: 4.1 },
+      { name: 'Sneakers', category: 'fashion', price: 69, rating: 4.5 },
+    ];
+
+    let filteredProducts = [...products];
+
+    function renderProducts() {
+      const productList = document.getElementById('productList');
+      productList.innerHTML = '';
+      filteredProducts.forEach(product => {
+        const div = document.createElement('div');
+        div.className = 'bg-white p-4 rounded shadow';
+        div.innerHTML = `
+          <h3 class="text-lg font-bold mb-1">${product.name}</h3>
+          <p class="text-sm text-gray-600">Category: ${product.category}</p>
+          <p class="text-sm text-gray-600">Price: $${product.price}</p>
+          <p class="text-sm text-yellow-500">⭐ Rating: ${product.rating}</p>
+        `;
+        productList.appendChild(div);
+      });
+    }
+
+    function filterProducts() {
+      const category = document.getElementById('categoryFilter').value;
+      filteredProducts = category === 'all'
+        ? [...products]
+        : products.filter(p => p.category === category);
+      sortProducts(); // sort after filtering
+    }
+
+    function sortProducts() {
+      const sortOption = document.getElementById('sortOption').value;
+      if (sortOption === 'priceLow') {
+        filteredProducts.sort((a, b) => a.price - b.price);
+      } else if (sortOption === 'priceHigh') {
+        filteredProducts.sort((a, b) => b.price - a.price);
+      } else if (sortOption === 'ratingHigh') {
+        filteredProducts.sort((a, b) => b.rating - a.rating);
+      }
+      renderProducts();
+    }
+
+    // Initial render
+    renderProducts();
+  </script>
+</body>
+</html>
